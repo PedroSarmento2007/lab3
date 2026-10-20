@@ -1,14 +1,16 @@
+package filmnow;
+
 import java.util.Objects;
 
 public class Filme {
 
     private String nome;
 
-    private int anoDeLancamento;
+    private String anoDeLancamento;
 
     private String ondeVer;
 
-    public Filme(String nome, int anoDeLancamento, String ondeVer) {
+    public Filme(String nome, String anoDeLancamento, String ondeVer) {
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
         this.ondeVer = ondeVer;
@@ -18,7 +20,7 @@ public class Filme {
         return this.nome;
     }
 
-    public int getAnoDeLancamento() {
+    public String getAnoDeLancamento() {
         return this.anoDeLancamento;
     }
 
@@ -43,3 +45,4 @@ public class Filme {
     }
 
 }
+
