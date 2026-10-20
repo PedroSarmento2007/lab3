@@ -8,8 +8,10 @@ public class Filme {
 
     private String ondeVer;
 
-    public Filme(String nome, int anoDeLancamento, String OndeVer) {
-
+    public Filme(String nome, int anoDeLancamento, String ondeVer) {
+        this.nome = nome;
+        this.anoDeLancamento = anoDeLancamento;
+        this.ondeVer = ondeVer;
     }
 
     public String getNome() {
