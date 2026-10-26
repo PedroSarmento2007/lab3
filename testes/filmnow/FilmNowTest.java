@@ -2,56 +2,159 @@ package filmnow;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class FilmNowTest {
-    private Filme filme;
+    private Filme filme1;
+    private Filme filme2;
     private FilmNow fn;
-    private Filme[] filmes;
-    private Filme[] hotList;
 
     @BeforeEach
-    private void criaFilmeNow() {
+    public void criaFilmeNow() {
         this.fn = new FilmNow();
-        String nome = "Avatar";
-        String ano = "2009";
-        String ondeVer = "Disney Plus";
-        this.filmes = new Filme[100];
-        this.hotList = new Filme[10];
-        this.filme = new Filme(nome, ano, ondeVer);
+        this.filme1 = new Filme("Avatar", "2009", "Disney Plus");
+        this.filme2 = new Filme("Toy Story", "1995", "Disney Plus");
+        fn.cadastraFilme(1, "Avatar", "2009", "Disney Plus");
+        fn.cadastraHot(1, 1);
     }
 
     @Test
     void getFilmes() {
-        fn.cadastraFilme(0, this.filme.getNome(), this.filme.getAnoDeLancamento(), this.filme.getOndeVer());
-        Filme[] teste = new Filme[100];
-        teste[0] = this.filme;
-        assert Arrays.equals(fn.getFilmes(), teste);
+        Filme[] arrayTeste = new Filme[100];
+        arrayTeste[0] = this.filme1;
+        assertArrayEquals(arrayTeste, fn.getFilmes());
     }
 
     @Test
-    void getFilme(int i) {
-        assert fn.getFilme(0).equals(this.filme);
+    void getFilme() {
+        assertEquals(this.filme1, fn.getFilme(1));
+    }
+
+    @Test
+    void getFilmePosicaoVazia() {
+        assertNull(fn.getFilme(50));
+    }
+
+    @Test
+    void getFilmePosicaoInvalida() {
+        assertThrows(IndexOutOfBoundsException.class, () -> fn.getFilme(0));
     }
 
     @Test
     void cadastraFilme() {
-        assert fn.cadastraFilme(0, this.filme.getNome(), this.filme.getAnoDeLancamento(), this.filme.getOndeVer()).equals("FILME ADICIONADO");
+        assertEquals("FILME ADICIONADO", fn.cadastraFilme(2, this.filme2.getNome(),
+                this.filme2.getAnoDeLancamento(), this.filme2.getOndeVer()));
+    }
+
+    @Test
+    void cadastraFilmePosicaoInvalida() {
+        IndexOutOfBoundsException e = assertThrows(IndexOutOfBoundsException.class,
+                () -> fn.cadastraFilme(0, "Duna", "2021", "Cinema"));
+        assertEquals("POSIÇÃO INVÁLIDA", e.getMessage());
+    }
+
+    @Test
+    void cadastraFilmeNomeVazio() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.cadastraFilme(2, "", "2021", "Cinema"));
+        assertEquals("FILME INVÁLIDO", e.getMessage());
+    }
+
+    @Test
+    void cadastraFilmeAnoVazio() {
+        assertThrows(IllegalArgumentException.class, () -> fn.cadastraFilme(2, "Duna", "", "Cinema"));
+    }
+
+    @Test
+    void cadastraFilmeLocalVazio() {
+        assertThrows(IllegalArgumentException.class, () -> fn.cadastraFilme(2, "Duna", "2021", ""));
+    }
+
+    @Test
+    void cadastraFilmeDuplicado() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.cadastraFilme(2, "Avatar", "2009", "Netflix"));
+        assertEquals("FILME JÁ ADICIONADO", e.getMessage());
+    }
+
+    @Test
+    void cadastraFilmeMesmoNomeOutroAno() {
+        assertEquals("FILME ADICIONADO", fn.cadastraFilme(2, "Avatar", "2022", "Cinema"));
+    }
+
+    @Test
+    void cadastraFilmeSobrescrevePosicao() {
+        fn.cadastraFilme(1, this.filme2.getNome(), this.filme2.getAnoDeLancamento(), this.filme2.getOndeVer());
+        assertEquals(this.filme2, fn.getFilme(1));
     }
 
     @Test
     void cadastraHot() {
+        fn.cadastraFilme(2, this.filme2.getNome(), this.filme2.getAnoDeLancamento(), this.filme2.getOndeVer());
+        assertEquals("ADICIONADO À HOTLIST NA POSIÇÃO 5!", fn.cadastraHot(5, 2));
+    }
+
+    @Test
+    void cadastraHotPosicaoInvalida() {
+        IndexOutOfBoundsException e = assertThrows(IndexOutOfBoundsException.class,
+                () -> fn.cadastraHot(0, 1));
+        assertEquals("POSIÇÃO INVÁLIDA", e.getMessage());
+    }
+
+    @Test
+    void cadastraHotSemFilme() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.cadastraHot(2, 50));
+        assertEquals("SEM FILME NA POSIÇÃO INFORMADA", e.getMessage());
+    }
+
+    @Test
+    void cadastraHotFilmeRepetido() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.cadastraHot(2, 1));
+        assertEquals("FILME JÁ ADICIONADO NA HOTLIST", e.getMessage());
+    }
+
+    @Test
+    void cadastraHotSubstituiFilme() {
+        fn.cadastraFilme(2, this.filme2.getNome(), this.filme2.getAnoDeLancamento(), this.filme2.getOndeVer());
+        fn.cadastraHot(1, 2);
+        assertEquals(this.filme2, fn.getHotlist()[0]);
+        assertFalse(fn.naHotlist(this.filme1));
     }
 
     @Test
     void getHotlist() {
+        Filme[] arrayTeste = new Filme[10];
+        arrayTeste[0] = this.filme1;
+        assertArrayEquals(arrayTeste, fn.getHotlist());
     }
 
     @Test
     void removeHot() {
+        fn.removeHot(1);
+        assertArrayEquals(new Filme[10], fn.getHotlist());
+        assertFalse(fn.naHotlist(this.filme1));
+    }
+
+    @Test
+    void removeHotPosicaoInvalida() {
+        assertThrows(IndexOutOfBoundsException.class, () -> fn.removeHot(0));
+    }
+
+    @Test
+    void removeHotPosicaoVazia() {
+        assertDoesNotThrow(() -> fn.removeHot(5));
     }
 
     @Test
     void naHotlist() {
+        assertTrue(fn.naHotlist(this.filme1));
+    }
+
+    @Test
+    void naHotlistFilmeIgualOutroObjeto() {
+        assertTrue(fn.naHotlist(new Filme("Avatar", "2009", "Netflix")));
     }
 }

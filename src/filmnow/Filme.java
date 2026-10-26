@@ -31,8 +31,12 @@ public class Filme {
      * @param nome            Nome do filme.
      * @param anoDeLancamento Ano de lançamento do filme.
      * @param ondeVer         Local onde o filme pode ser assistido.
+     * @throws IllegalArgumentException Se o nome, o ano ou o local estiverem vazios.
      */
     public Filme(String nome, String anoDeLancamento, String ondeVer) {
+        if (nome.isBlank() || anoDeLancamento.isBlank() || ondeVer.isBlank()) {
+            throw new IllegalArgumentException("FILME INVÁLIDO");
+        }
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
         this.ondeVer = ondeVer;
