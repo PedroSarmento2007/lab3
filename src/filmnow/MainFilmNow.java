@@ -58,6 +58,8 @@ public class MainFilmNow {
                         "(E)Exibir Hotlist\n" +
                         "(H)Atribuir Hot\n" +
                         "(R)Remover Hot\n" +
+                        "(L)Adicionar Local\n" +
+                        "(T)Remover Local\n" +
                         "(S)air\n" +
                         "\n" +
                         "Opção> ");
@@ -90,6 +92,11 @@ public class MainFilmNow {
                 break;
             case "R":
                 removeHot(fn, scanner);
+            case "L":
+                adicionaLocal(fn, scanner);
+                break;
+            case "T":
+                removeLocal(fn, scanner);
                 break;
             case "S":
                 sai();
@@ -171,7 +178,18 @@ public class MainFilmNow {
         String ano = scanner.nextLine();
         System.out.print("\nLocal> ");
         String local = scanner.nextLine();
-        System.out.println(fn.cadastraFilme(posicao, nome, ano, local));
+        if (nome.isBlank()) {
+            throw new IllegalArgumentException("FILME INVÁLIDO");
+        }
+        if (posicao >= 1 && posicao <= 100) {
+            System.out.println(fn.cadastraFilme(posicao, nome, ano, local));
+        }
+        else {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 100");
+            System.out.print("\nPosição no sistema> ");
+            posicao = Integer.parseInt(scanner.nextLine());
+            System.out.println(fn.cadastraFilme(posicao, nome, ano, local));
+        }
     }
 
     /**
@@ -212,6 +230,36 @@ public class MainFilmNow {
         System.out.print("\nPosição na Hotlist> ");
         int posicaoHot = Integer.parseInt(scanner.nextLine());
         fn.removeHot(posicaoHot);
+    }
+
+    /**
+     * Adiciona um local aos filmes passados pelo usuário.
+     *
+     * @param fn O sistema FilmNow a ser manipulado.
+     * @param scanner Scanner para pedir a posição na Hotlist.
+     */
+    private static void adicionaLocal(FilmNow fn, Scanner scanner) {
+        System.out.print("\nPosição do(s) Filme(s) (separe com espaços)> ");
+        String[] posFilmes = scanner.nextLine().split(" ");
+        System.out.print("\nLocal a ser adicionado> ");
+        String local = scanner.nextLine();
+        for (String posFilme: posFilmes) {
+            fn.getFilme(Integer.parseInt(posFilme)).addOndeVer(local);
+        }
+    }
+
+    /**
+     * Remove um local do filme passado pelo usuário.
+     *
+     * @param fn O sistema FilmNow a ser manipulado.
+     * @param scanner Scanner para pedir a posição na Hotlist.
+     */
+    private static void removeLocal(FilmNow fn, Scanner scanner) {
+        System.out.print("\nPosição do Filme> ");
+        String posFilme = scanner.nextLine();
+        System.out.print("\nLocal a ser removido> ");
+        String local = scanner.nextLine();
+        fn.getFilme(Integer.parseInt(posFilme)).removeOndeVer(local);
     }
 
 

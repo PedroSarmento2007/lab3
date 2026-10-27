@@ -81,10 +81,7 @@ public class FilmNow {
      *                                   ou se o filme já estiver no sistema.
      */
     public String cadastraFilme(int posicao, String nome, String anoDeLancamento, String ondeVer) {
-        if (!posicaoValida(posicao, TAMANHO_FILMES)) {
-            throw new IndexOutOfBoundsException("POSIÇÃO INVÁLIDA");
-        }
-        if (nome.isBlank() || ondeVer.isBlank() || anoDeLancamento.isBlank()) {
+        if (nome.isBlank()) {
             throw new IllegalArgumentException("FILME INVÁLIDO");
 
         }

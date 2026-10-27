@@ -1,5 +1,6 @@
 package filmnow;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -21,25 +22,35 @@ public class Filme {
     private String anoDeLancamento;
 
     /**
-     * Local onde o filme pode ser assistido (Netflix, Cinema, etc).
+     * Locais onde o filme pode ser assistido (Netflix, Cinema, etc), até 5.
      */
-    private String ondeVer;
+    private String[] ondeVer;
 
     /**
-     * Cria um filme a partir do nome, do ano de lançamento e do local onde assisti-lo.
+     * Índice de onde dever ser colocado o próximo local onde ver um filme.
+     */
+    private int iOndeVer;
+
+    /**
+     * Cria um filme a partir do nome, do ano de lançamento e dos locais onde assisti-lo.
      *
      * @param nome            Nome do filme.
      * @param anoDeLancamento Ano de lançamento do filme.
-     * @param ondeVer         Local onde o filme pode ser assistido.
+     * @param ondeVer         Locais onde o filme pode ser assistido.
      * @throws IllegalArgumentException Se o nome, o ano ou o local estiverem vazios.
      */
     public Filme(String nome, String anoDeLancamento, String ondeVer) {
-        if (nome.isBlank() || anoDeLancamento.isBlank() || ondeVer.isBlank()) {
+        if (nome.isBlank()) {
             throw new IllegalArgumentException("FILME INVÁLIDO");
+        }
+        if (nome == null) {
+            throw new NullPointerException("FILME NULO");
         }
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
-        this.ondeVer = ondeVer;
+        this.ondeVer = new String[5];
+        this.ondeVer[0] = ondeVer;
+        this.iOndeVer = 1;
     }
 
     /**
@@ -65,8 +76,44 @@ public class Filme {
      *
      * @return O local onde o filme pode ser assistido.
      */
-    public String getOndeVer() {
+    public String[] getOndeVer() {
         return this.ondeVer;
+    }
+
+    /**
+     * Adiciona um local onde ver o filme
+     *
+     * @param local É o local que será colocado.
+     */
+
+    public void addOndeVer( String local) {
+        this.ondeVer[this.iOndeVer] = local;
+        this.iOndeVer += 1;
+        if (this.iOndeVer >=5) {
+            this.iOndeVer = 0;
+        }
+    }
+
+    /**
+     * Remove um local onde ver o filme da lista de locais.
+     * Só pode remover se tiver mais de um local na lista.
+     *
+     * @param local É o local que será retirado.
+     */
+    public void removeOndeVer(String local) {
+        int cont = 0;
+        for (String ondeVer : this.ondeVer) {
+            if (ondeVer != null) {
+                cont += 1;
+            }
+        }
+        if (cont > 1) {
+            for (int i = 0; i < ondeVer.length; i++) {
+                if (local.equals(this.ondeVer[i])) {
+                    this.ondeVer[i] = null;
+                }
+            }
+        }
     }
 
     /**
@@ -77,7 +124,17 @@ public class Filme {
      */
     @Override
     public String toString() {
-        return this.nome + ", " + this.anoDeLancamento + "\n" + this.ondeVer;
+        String locais = "";
+        for (int i = 0; i < this.ondeVer.length; i++) {
+         if (this.ondeVer[i] != null) {
+             if (i == 0) {
+                 locais += this.ondeVer[i];
+             } else {
+                 locais += ", " + this.ondeVer[i];
+             }
+         }
+        }
+        return this.nome + ", " + this.anoDeLancamento + "\n" + locais;
     }
 
     /**

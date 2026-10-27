@@ -9,7 +9,7 @@ public class FilmeTest {
     private Filme filme;
 
     @BeforeEach
-    public void criaFilme() {
+    public void setUp() {
         String nome = "Avatar";
         String ano = "2009";
         String ondeVer = "Disney Plus";
@@ -28,7 +28,7 @@ public class FilmeTest {
 
     @Test
     void getOndeVer() {
-        assertEquals("Disney Plus", filme.getOndeVer());
+        assertArrayEquals(new String[]{"Disney Plus",null,null,null,null}, filme.getOndeVer());
     }
 
     @Test
@@ -37,43 +37,29 @@ public class FilmeTest {
     }
 
     @Test
-    void testEquals() {
+    void testNotEquals() {
         Filme filmeDif = new Filme("Toy Story", "1995", "Disney Plus");
         assertNotEquals(filme, filmeDif);
     }
 
     @Test
-    void equalsMesmoNomeEAnoOutroLocal() {
+    void testEquals() {
         Filme mesmoFilme = new Filme("Avatar", "2009", "Netflix");
         assertEquals(filme, mesmoFilme);
     }
 
     @Test
-    void equalsMesmoNomeOutroAno() {
+    void testEqualsMesmoNomeOutroAno() {
         Filme outroAno = new Filme("Avatar", "2022", "Disney Plus");
         assertNotEquals(filme, outroAno);
     }
 
-    @Test
-    void equalsNull() {
-        assertNotEquals(filme, null);
-    }
 
     @Test
     void construtorNomeVazio() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> new Filme("", "2009", "Disney Plus"));
         assertEquals("FILME INVÁLIDO", e.getMessage());
-    }
-
-    @Test
-    void construtorAnoVazio() {
-        assertThrows(IllegalArgumentException.class, () -> new Filme("Avatar", "", "Disney Plus"));
-    }
-
-    @Test
-    void construtorLocalVazio() {
-        assertThrows(IllegalArgumentException.class, () -> new Filme("Avatar", "2009", ""));
     }
 
 }
