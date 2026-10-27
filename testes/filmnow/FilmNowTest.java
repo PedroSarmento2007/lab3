@@ -38,7 +38,7 @@ class FilmNowTest {
 
     @Test
     void getFilmePosicaoInvalida() {
-        assertThrows(IndexOutOfBoundsException.class, () -> fn.getFilme(0));
+        assertNull(fn.getFilme(0));
     }
 
     @Test
@@ -72,9 +72,7 @@ class FilmNowTest {
 
     @Test
     void cadastraHotPosicaoInvalida() {
-        IndexOutOfBoundsException e = assertThrows(IndexOutOfBoundsException.class,
-                () -> fn.cadastraHot(0, 1));
-        assertEquals("POSIÇÃO INVÁLIDA", e.getMessage());
+        assertEquals("POSIÇÃO INVÁLIDA", fn.cadastraHot(0, 1));
     }
 
     @Test
@@ -110,5 +108,32 @@ class FilmNowTest {
     @Test
     void naHotlist() {
         assertTrue(fn.naHotlist(this.filme1));
+    }
+
+    @Test
+    void adicionaLocal() {
+        fn.adicionaLocal(1, "Netflix");
+        assertArrayEquals(new String[]{"Disney Plus", "Netflix"}, fn.getFilme(1).getOndeVer());
+    }
+
+    @Test
+    void adicionaLocalSemFilme() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.adicionaLocal(50, "Netflix"));
+        assertEquals("SEM FILME NA POSIÇÃO INFORMADA", e.getMessage());
+    }
+
+    @Test
+    void removeLocal() {
+        fn.adicionaLocal(1, "Netflix");
+        fn.removeLocal(1, "Disney Plus");
+        assertArrayEquals(new String[]{"Netflix"}, fn.getFilme(1).getOndeVer());
+    }
+
+    @Test
+    void removeLocalSemFilme() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fn.removeLocal(50, "Netflix"));
+        assertEquals("SEM FILME NA POSIÇÃO INFORMADA", e.getMessage());
     }
 }

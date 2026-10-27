@@ -92,6 +92,7 @@ public class MainFilmNow {
                 break;
             case "R":
                 removeHot(fn, scanner);
+                break;
             case "L":
                 adicionaLocal(fn, scanner);
                 break;
@@ -131,6 +132,11 @@ public class MainFilmNow {
     private static void detalharFilme(FilmNow fn, Scanner scanner) {
         System.out.print("\nQual filme> ");
         int posicao = Integer.parseInt(scanner.nextLine());
+        if (posicao < 1 || posicao > 100) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 100");
+            System.out.print("\nQual filme> ");
+            posicao = Integer.parseInt(scanner.nextLine());
+        }
         Filme filme = fn.getFilme(posicao);
         if (filme == null) {
             System.out.println("POSIÇÃO INVÁLIDA!");
@@ -201,8 +207,18 @@ public class MainFilmNow {
     private static void cadastraHot(FilmNow fn, Scanner scanner){
         System.out.print("\nPosição do Filme> ");
         int posicao = Integer.parseInt(scanner.nextLine());
+        if (posicao < 1 || posicao > 100) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 100");
+            System.out.print("\nPosição do Filme> ");
+            posicao = Integer.parseInt(scanner.nextLine());
+        }
         System.out.print("\nPosição na Hotlist> ");
         int posicaoHot = Integer.parseInt(scanner.nextLine());
+        if (posicaoHot < 1 || posicaoHot > 10) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 10");
+            System.out.print("\nPosição na Hotlist> ");
+            posicaoHot = Integer.parseInt(scanner.nextLine());
+        }
         System.out.println(fn.cadastraHot(posicaoHot, posicao));
     }
 
@@ -229,37 +245,50 @@ public class MainFilmNow {
     private static void removeHot(FilmNow fn, Scanner scanner) {
         System.out.print("\nPosição na Hotlist> ");
         int posicaoHot = Integer.parseInt(scanner.nextLine());
+        if (posicaoHot < 1 || posicaoHot > 10) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 10");
+            System.out.print("\nPosição na Hotlist> ");
+            posicaoHot = Integer.parseInt(scanner.nextLine());
+        }
         fn.removeHot(posicaoHot);
     }
 
     /**
-     * Adiciona um local aos filmes passados pelo usuário.
+     * Adiciona um local onde ver um filme.
      *
      * @param fn O sistema FilmNow a ser manipulado.
-     * @param scanner Scanner para pedir a posição na Hotlist.
+     * @param scanner Scanner para pedir a posição do filme e o local.
      */
     private static void adicionaLocal(FilmNow fn, Scanner scanner) {
-        System.out.print("\nPosição do(s) Filme(s) (separe com espaços)> ");
-        String[] posFilmes = scanner.nextLine().split(" ");
+        System.out.print("\nPosição do Filme> ");
+        int posicao = Integer.parseInt(scanner.nextLine());
+        if (posicao < 1 || posicao > 100) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 100");
+            System.out.print("\nPosição do Filme> ");
+            posicao = Integer.parseInt(scanner.nextLine());
+        }
         System.out.print("\nLocal a ser adicionado> ");
         String local = scanner.nextLine();
-        for (String posFilme: posFilmes) {
-            fn.getFilme(Integer.parseInt(posFilme)).addOndeVer(local);
-        }
+        fn.adicionaLocal(posicao, local);
     }
 
     /**
-     * Remove um local do filme passado pelo usuário.
+     * Remove um local onde ver um filme.
      *
      * @param fn O sistema FilmNow a ser manipulado.
-     * @param scanner Scanner para pedir a posição na Hotlist.
+     * @param scanner Scanner para pedir a posição do filme e o local.
      */
     private static void removeLocal(FilmNow fn, Scanner scanner) {
         System.out.print("\nPosição do Filme> ");
-        String posFilme = scanner.nextLine();
+        int posicao = Integer.parseInt(scanner.nextLine());
+        if (posicao < 1 || posicao > 100) {
+            System.out.print("POSIÇÃO INVÁLIDA, INSIRA UMA ENTRE 1 E 100");
+            System.out.print("\nPosição do Filme> ");
+            posicao = Integer.parseInt(scanner.nextLine());
+        }
         System.out.print("\nLocal a ser removido> ");
         String local = scanner.nextLine();
-        fn.getFilme(Integer.parseInt(posFilme)).removeOndeVer(local);
+        fn.removeLocal(posicao, local);
     }
 
 

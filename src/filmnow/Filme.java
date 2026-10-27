@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  * Representação de um filme. Todo filme tem nome, ano de lançamento
- * e o local onde pode ser assistido.
+ * e até 5 locais onde pode ser assistido.
  *
  * @author Pedro Sarmento
  */
@@ -27,24 +27,25 @@ public class Filme {
     private String[] ondeVer;
 
     /**
-     * Índice de onde dever ser colocado o próximo local onde ver um filme.
+     * Índice onde deve ser colocado o próximo local. Volta a 0 depois do quinto local.
      */
     private int iOndeVer;
 
     /**
-     * Cria um filme a partir do nome, do ano de lançamento e dos locais onde assisti-lo.
+     * Cria um filme a partir do nome, do ano de lançamento e do primeiro local onde assisti-lo.
      *
      * @param nome            Nome do filme.
      * @param anoDeLancamento Ano de lançamento do filme.
-     * @param ondeVer         Locais onde o filme pode ser assistido.
-     * @throws IllegalArgumentException Se o nome, o ano ou o local estiverem vazios.
+     * @param ondeVer         Primeiro local onde o filme pode ser assistido.
+     * @throws NullPointerException     Se o nome for null.
+     * @throws IllegalArgumentException Se o nome estiver vazio ou tiver só espaços.
      */
     public Filme(String nome, String anoDeLancamento, String ondeVer) {
-        if (nome.isBlank()) {
-            throw new IllegalArgumentException("FILME INVÁLIDO");
-        }
         if (nome == null) {
             throw new NullPointerException("FILME NULO");
+        }
+        if (nome.isBlank()) {
+            throw new IllegalArgumentException("FILME INVÁLIDO");
         }
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
@@ -72,20 +73,34 @@ public class Filme {
     }
 
     /**
-     * Retorna o local onde o filme pode ser assistido.
+     * Retorna os locais onde o filme pode ser assistido.
      *
-     * @return O local onde o filme pode ser assistido.
+     * @return Um array só com os locais preenchidos.
      */
     public String[] getOndeVer() {
-        return this.ondeVer;
+        int quantidade = 0;
+        for (String local : this.ondeVer) {
+            if (local != null) {
+                quantidade += 1;
+            }
+        }
+        String[] locais = new String[quantidade];
+        int i = 0;
+        for (String local : this.ondeVer) {
+            if (local != null) {
+                locais[i] = local;
+                i += 1;
+            }
+        }
+        return locais;
     }
 
     /**
-     * Adiciona um local onde ver o filme
+     * Adiciona um local onde ver o filme. Com 5 locais, o próximo
+     * sobrescreve o mais antigo.
      *
-     * @param local É o local que será colocado.
+     * @param local Local a ser adicionado.
      */
-
     public void addOndeVer( String local) {
         this.ondeVer[this.iOndeVer] = local;
         this.iOndeVer += 1;
@@ -95,10 +110,10 @@ public class Filme {
     }
 
     /**
-     * Remove um local onde ver o filme da lista de locais.
-     * Só pode remover se tiver mais de um local na lista.
+     * Remove um local onde ver o filme. Se o filme tiver só um local,
+     * nada é removido.
      *
-     * @param local É o local que será retirado.
+     * @param local Local a ser removido.
      */
     public void removeOndeVer(String local) {
         int cont = 0;
@@ -118,21 +133,22 @@ public class Filme {
 
     /**
      * Retorna a representação do filme em texto, no formato
-     * "nome, ano" seguido do local em uma nova linha.
+     * "nome, ano" seguido dos locais, separados por vírgula, em uma nova linha.
      *
      * @return A representação em String do filme.
      */
     @Override
     public String toString() {
         String locais = "";
-        for (int i = 0; i < this.ondeVer.length; i++) {
-         if (this.ondeVer[i] != null) {
-             if (i == 0) {
-                 locais += this.ondeVer[i];
-             } else {
-                 locais += ", " + this.ondeVer[i];
-             }
-         }
+        int contador = 0;
+        for (String local : this.ondeVer) {
+            if (local != null) {
+                if (contador > 0) {
+                    locais += ", ";
+                }
+                locais += local;
+                contador += 1;
+            }
         }
         return this.nome + ", " + this.anoDeLancamento + "\n" + locais;
     }

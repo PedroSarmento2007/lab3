@@ -28,7 +28,28 @@ public class FilmeTest {
 
     @Test
     void getOndeVer() {
-        assertArrayEquals(new String[]{"Disney Plus",null,null,null,null}, filme.getOndeVer());
+        assertArrayEquals(new String[]{"Disney Plus"}, filme.getOndeVer());
+    }
+
+    @Test
+    void addOndeVer() {
+        filme.addOndeVer("Netflix");
+        assertArrayEquals(new String[]{"Disney Plus", "Netflix"}, filme.getOndeVer());
+        assertEquals("Avatar, 2009\nDisney Plus, Netflix", filme.toString());
+    }
+
+    @Test
+    void removeOndeVer() {
+        filme.addOndeVer("Netflix");
+        filme.removeOndeVer("Disney Plus");
+        assertArrayEquals(new String[]{"Netflix"}, filme.getOndeVer());
+        assertEquals("Avatar, 2009\nNetflix", filme.toString());
+    }
+
+    @Test
+    void removeOndeVerUnicoLocal() {
+        filme.removeOndeVer("Disney Plus");
+        assertArrayEquals(new String[]{"Disney Plus"}, filme.getOndeVer());
     }
 
     @Test
@@ -60,6 +81,13 @@ public class FilmeTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> new Filme("", "2009", "Disney Plus"));
         assertEquals("FILME INVÁLIDO", e.getMessage());
+    }
+
+    @Test
+    void construtorNomeNull() {
+        NullPointerException e = assertThrows(NullPointerException.class,
+                () -> new Filme(null, "2009", "Disney Plus"));
+        assertEquals("FILME NULO", e.getMessage());
     }
 
 }
